@@ -15,6 +15,7 @@ var (
 	connection               *amqp.Connection
 	channel                  *amqp.Channel
 	exchangeName             string
+	exchangeArguments	 amqp.Table
 	routingKey               string
 	routingKeyDelimiter      string
 	removeRkValuesFromRecord bool
@@ -40,6 +41,7 @@ func FLBPluginInit(plugin unsafe.Pointer) int {
 	password := output.FLBPluginConfigKey(plugin, "RabbitPassword")
 	exchangeName = output.FLBPluginConfigKey(plugin, "ExchangeName")
 	exchangeType := output.FLBPluginConfigKey(plugin, "ExchangeType")
+	exchangeArguments := output.FLBPluginConfigKey(plugin, "ExchangeArguments")
 	routingKey = output.FLBPluginConfigKey(plugin, "RoutingKey")
 	routingKeyDelimiter = output.FLBPluginConfigKey(plugin, "RoutingKeyDelimiter")
 	removeRkValuesFromRecordStr := output.FLBPluginConfigKey(plugin, "RemoveRkValuesFromRecord")
@@ -102,7 +104,7 @@ func FLBPluginInit(plugin unsafe.Pointer) int {
 		false,        // auto-deleted
 		false,        // internal
 		false,        // no-wait
-		nil,          // arguments
+		exchangeArguments,          // arguments
 	)
 
 	if err != nil {
